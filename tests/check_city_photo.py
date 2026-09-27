@@ -26,6 +26,6 @@ with sync_playwright() as p:
     fallback.goto('http://127.0.0.1:8080')
     fallback.wait_for_function("document.getElementById('location-map').naturalWidth > 0", timeout=45000)
     assert fallback.locator('#location-map').is_visible()
-    assert fallback.locator('[data-field="weather.location"]').first.inner_text() != 'LOCALIZANDO...'
+    assert fallback.locator('[data-field="weather.location"]').first.inner_text() != 'LOCATING...'
     print('PASS: photo and city also load with location.js blocked')
     browser.close()

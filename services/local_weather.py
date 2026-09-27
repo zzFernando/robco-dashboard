@@ -33,4 +33,4 @@ def local_weather(latitude=None, longitude=None):
         weather = collect_weather(latitude=place['latitude'], longitude=place['longitude'], name=place['city'])
         return dict(weather, region=place['region'], approximate=latitude is None)
     except (OSError, ValueError, TypeError, KeyError):
-        return {'available': False, 'location': 'LOCAL INDISPONIVEL'}
+        return {'available': False, 'location': 'LOCATION UNAVAILABLE'}

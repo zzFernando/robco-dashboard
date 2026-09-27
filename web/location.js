@@ -1,7 +1,7 @@
 /* ES5: all external requests run on the host, not on the legacy tablet. */
 (function () {
   'use strict';
-  var current = {available: false, location: 'LOCALIZANDO...'}, generation = 0, photoKey = '';
+  var current = {available: false, location: 'LOCATING...'}, generation = 0, photoKey = '';
   window.robcoWeather = function () { return current; };
   function get(url, done) {
     var xhr = new XMLHttpRequest(), finished = false;
@@ -45,7 +45,7 @@
         } else if (coords) {
           locate(null); return;
         } else if (!current.available) {
-          current = data || {available: false, location: 'TENTANDO NOVAMENTE...'};
+          current = data || {available: false, location: 'RETRYING...'};
         } else { current.stale = true; }
         setTimeout(function () { if (token === generation) { refresh(); } }, data && data.available ? 600000 : 30000);
       });

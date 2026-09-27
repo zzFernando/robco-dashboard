@@ -1,10 +1,10 @@
 # ROBCO Operations Terminal
 
-Dashboard local de telemetria para usar em um iPad antigo. O computador executa o servidor; o iPad acessa a interface pelo navegador.
+Local telemetry dashboard for an older iPad. The computer runs the server; the iPad opens the interface in a browser.
 
-## Executar
+## Run
 
-Requer Python 3.10+.
+Requires Python 3.10+.
 
 ```powershell
 python -m venv .venv
@@ -12,47 +12,47 @@ python -m venv .venv
 .\\.venv\\Scripts\\python.exe app.py
 ```
 
-Abra no computador:
+Open on the computer:
 
 ```text
 http://localhost:8080
 ```
 
-No iPad, use o IP do computador na mesma rede:
+On the iPad, use the computer IP on the same network:
 
 ```text
 http://IP_DO_COMPUTADOR:8080
 ```
 
-## O que aparece
+## What is displayed
 
-A tela contém seis cards:
+The screen contains six cards:
 
-- Weather: cidade, clima, métricas e foto turística.
-- System: CPU, memória e disco.
-- Now Playing: mídia atual.
-- Codex e Claude: status, modelo, tokens e limites.
-- Pomodoro: foco e pausas.
+- Weather: city, conditions, metrics and a landmark photo.
+- System: CPU, memory and disk.
+- Now Playing: current media.
+- Codex and Claude: status, model, tokens and limits.
+- Pomodoro: focus and breaks.
 
-O layout ocupa a tela inteira e foi ajustado para Safari/WebKit antigo. Não há barra superior nem abas.
+The layout fills the viewport and is tuned for older Safari/WebKit. There is no top bar or tab navigation.
 
-## Localização e clima
+## Location and weather
 
-O sistema tenta usar a localização do dispositivo. Se não houver GPS, usa uma estimativa por IP. O servidor consulta o clima e busca uma foto da cidade.
+The system tries to use the device location. If GPS is unavailable, it uses an approximate IP location. The server fetches weather data and a city photo.
 
-## Segurança
+## Security
 
-O servidor não possui autenticação e fica acessível na rede local. Não exponha a porta 8080 à internet.
+The server has no authentication and is reachable on the local network. Do not expose port 8080 to the internet.
 
-O dashboard pode mostrar nome do computador, IDs de sessão, consumo dos agentes, mídia atual e localização aproximada. Senhas, chaves, prompts e respostas não são enviados pela API.
+The dashboard may show the computer name, session IDs, agent usage, current media and approximate location. Passwords, keys, prompts and responses are not sent by the API.
 
-## Testes
+## Tests
 
 ```powershell
 .\\.venv\\Scripts\\python.exe -m unittest discover -s tests -v
 ```
 
-Com o servidor rodando e Playwright instalado:
+With the server running and Playwright installed:
 
 ```powershell
 .\\.venv\\Scripts\\python.exe tests/check_city_photo.py
