@@ -1,0 +1,356 @@
+/* ES5-era WebKit compatible display layout. */
+html,body{width:100%;height:100%;margin:0;padding:0}
+body{background:#070d08;color:#9cdb83;font:700 16px/1.45 "Courier New Bold","Courier New",Courier,monospace;text-shadow:0 0 3px rgba(129,223,99,.2);-webkit-text-size-adjust:100%}
+body,body *{font-family:"Courier New Bold","Courier New",Courier,monospace !important;font-weight:700 !important}
+body.amber{background:#100d06;color:#e7ba6c;text-shadow:0 0 3px rgba(231,186,108,.2)}
+*{box-sizing:border-box;-webkit-box-sizing:border-box}
+button{font:inherit;color:inherit;background:transparent;border:1px solid transparent;border-radius:0;cursor:pointer;padding:8px 12px;text-shadow:inherit;-webkit-appearance:none}
+button:focus{outline:1px dashed currentColor}
+button:disabled{opacity:.35;cursor:default}
+#terminal{position:absolute;top:0;right:0;bottom:0;left:0;max-width:none;margin:0}
+/* Static scanline texture only; no animation, cheap to paint once. */
+#terminal:after{content:"";position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none;background:-webkit-repeating-linear-gradient(top,transparent 0,transparent 3px,rgba(0,0,0,.08) 4px);background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,.08) 4px)}
+.hidden{display:none}
+.dim{opacity:.6}
+h1{font-size:22px;line-height:1.2;margin:8px 0 0;letter-spacing:1px}
+.operator{font-size:14px;font-weight:700;opacity:.85}
+
+/* ---- Header ---- */
+#masthead{border-top:3px double currentColor;padding:6px 0 8px}
+.meta-row{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;font-size:10px;letter-spacing:.5px;line-height:1.6;opacity:.9;padding-bottom:6px;border-bottom:1px solid rgba(156,219,131,.3)}
+.amber .meta-row{border-bottom-color:rgba(231,186,108,.3)}
+.meta-item{white-space:nowrap;margin-right:26px}
+.meta-row .meta-clock{margin-left:auto;margin-right:0}
+.meta-item .edition{opacity:.65}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5a5a58;margin-right:5px;vertical-align:middle}
+.status-dot.on{background:#8fae6e;box-shadow:0 0 4px #8fae6e}
+.status-dot.off{background:#c0392b;box-shadow:0 0 4px #c0392b}
+.meta-clock{font-size:12px;font-weight:bold}
+.quality-tag{margin-left:10px;font-size:11px;opacity:.7}
+.header-actions{float:right}
+.header-actions button{font-size:11px;padding:0 8px;min-height:30px;text-decoration:underline}
+
+/* ---- Content area ---- */
+#content{position:absolute;top:0;bottom:0;left:0;right:0;overflow:hidden}
+.view{height:100%;position:relative}
+
+/* ---- Generic panel shell (bordered, near-transparent; used across the whole dashboard) ---- */
+.panel{border:1px solid rgba(156,219,131,.3);border-radius:6px;padding:10px 12px;background:rgba(156,219,131,.02);overflow:hidden}
+.amber .panel{border-color:rgba(231,186,108,.32);background:rgba(231,186,108,.02)}
+.panel-head{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:baseline;-webkit-align-items:baseline;align-items:baseline;border-bottom:1px solid rgba(156,219,131,.3);padding-bottom:5px;margin-bottom:7px;font-size:13px;letter-spacing:.5px}
+.amber .panel-head{border-bottom-color:rgba(231,186,108,.32)}
+.panel-head .tag{font-size:10px;opacity:.6;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50%}
+.clickable{cursor:pointer}
+.clickable:hover{background:rgba(156,219,131,.06)}
+.amber .clickable:hover{background:rgba(231,186,108,.06)}
+
+/* ---- Dashboard grid: three rows, each with its own column proportions.
+   Table/table-cell (not CSS Grid) so panels in a row reliably match height
+   across engines -- grid's row-stretch behavior is not consistent on older
+   WebKit, which is exactly the audience this dashboard targets. ---- */
+.dash-row{display:-webkit-box;display:-webkit-flex;display:flex;gap:9px;width:100%;margin:0 0 9px}
+.dash-row>.panel{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;min-width:0}
+.row-bottom{margin-bottom:0}
+/* Same three columns on every multi-panel row so the gutters line up top to bottom. */
+.dash-row>.panel:nth-child(1){width:34%;-webkit-box-flex:34;-webkit-flex:34;flex:34}
+.dash-row>.panel:nth-child(2){width:33%;-webkit-box-flex:33;-webkit-flex:33;flex:33}
+.dash-row>.panel:nth-child(3){width:33%;-webkit-box-flex:33;-webkit-flex:33;flex:33}
+.view>.dash-row{height:calc(50% - 5px)}
+
+/* ---- Small value rows (label + value), reused across several panels ---- */
+.row{display:table;width:100%;table-layout:fixed;line-height:18px;font-size:11px}
+.label{display:table-cell;width:78px;opacity:.65}
+.value{display:table-cell;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- Icon badges shared by weather/system/agents ---- */
+.icon-badge{display:inline-block;width:34px;height:34px;line-height:34px;border-radius:9px;text-align:center;font-size:15px;text-shadow:none;vertical-align:middle}
+.codex-badge{background:rgba(62,207,142,.16);color:#3ecf8e;letter-spacing:-1px;font-size:13px}
+.claude-badge{background:rgba(217,119,87,.18);color:#d97757}
+.weather-badge{background:rgba(90,169,255,.16);color:#5aa9ff;font-size:10px;letter-spacing:0}
+.system-badge{background:rgba(176,174,165,.14);color:#b0aea5;font-size:11px;letter-spacing:1px}
+
+/* ---- Weather panel ---- */
+.weather-body{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px}
+.weather-body .icon-badge{width:44px;height:44px;line-height:44px;font-size:18px}
+.weather-temp{font-size:32px;font-weight:bold;color:#5aa9ff;text-shadow:none;line-height:1}
+.weather-feels{font-size:11px;opacity:.7;margin-top:2px}
+.weather-cond{font-size:13px;margin-top:6px;letter-spacing:.5px}
+.weather-extra{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:10px;font-size:10px;opacity:.75;margin-top:6px}
+.weather-merged{display:-webkit-box;display:-webkit-flex;display:flex;gap:12px}
+.weather-panel .weather-merged{-webkit-box-flex:1;-webkit-flex:1;flex:1;-webkit-box-align:center;-webkit-align-items:center;align-items:center}
+.weather-data{-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0}
+.weather-map{-webkit-flex:0 0 auto;flex:0 0 auto;width:120px;position:relative}
+.weather-map img{width:120px;height:120px;object-fit:cover;border-radius:6px;display:block;background:rgba(156,219,131,.06)}
+.weather-map img.hidden{display:none}
+#city-photo-empty{position:absolute;top:40%;left:0;right:0;text-align:center;font-size:11px;opacity:.65}
+#city-photo-source{color:inherit;margin-left:8px}
+.weather-map-caption{position:absolute;left:4px;right:4px;bottom:4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;font-size:8px;letter-spacing:.5px;background:rgba(0,0,0,.55);padding:2px 5px;border-radius:3px;color:#cfe9c0}
+
+/* ---- Now playing panel ---- */
+.now-playing-body{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px}
+.now-playing-panel .now-playing-body{-webkit-box-flex:1;-webkit-flex:1;flex:1;-webkit-box-align:center;-webkit-align-items:center;align-items:center}
+.now-playing-panel .art-cell{width:64px;height:64px;-webkit-flex:0 0 auto;flex:0 0 auto}
+.now-playing-panel .art-cell img{width:64px;height:64px}
+.now-playing-panel .art-empty{width:64px;height:64px}
+.now-playing-info{min-width:0;-webkit-flex:1;flex:1}
+.np-track{font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-artist,.np-album{font-size:11px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-progress{margin-top:8px}
+.np-times{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;font-size:9px;opacity:.6;margin-top:2px}
+.np-controls{margin-top:6px;text-align:center}
+.np-controls button{font-size:13px;padding:3px 14px;min-height:0;border:1px solid rgba(156,219,131,.4);border-radius:8px;margin:0 4px}
+.media-icon{display:block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin:auto}
+.amber .np-controls button{border-color:rgba(231,186,108,.4)}
+.np-controls button:hover{background:rgba(156,219,131,.08)}
+
+/* ---- Meters (agents / system / pomodoro / now-playing progress) ---- */
+.meter{margin-top:5px}
+.meter-head{display:table;width:100%;font-size:10px;opacity:.7}
+.meter-head span{display:table-cell}
+.meter-head span+span{text-align:right}
+.meter-track{height:6px;border-radius:3px;background:rgba(156,219,131,.12);overflow:hidden;margin:2px 0}
+.amber .meter-track{background:rgba(231,186,108,.14)}
+.meter-fill{height:100%;border-radius:3px;width:0;background:#788c5d}
+.meter-fill.low{background:#788c5d}
+.meter-fill.mid{background:#d97757}
+.meter-fill.high{background:#c0392b}
+.meter-reset{font-size:9px;opacity:.55}
+
+/* ---- Agents panel ---- */
+.agent-row-head{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;margin-bottom:6px}
+.agent-meta{-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;font-size:11px}
+.agent-meta .value{display:block}
+.agent-today{font-size:10px;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent-panel .meter{margin-top:8px}
+.pill{display:inline-block;padding:1px 8px;border-radius:9px;font-size:10px;font-weight:bold;text-shadow:none;vertical-align:middle;border:1px solid #6b6b68;color:#b0aea5}
+.pill-on{border-color:#8fae6e;color:#8fae6e}
+.pill-busy{border-color:#d97757;color:#d97757}
+.pill-off{border-color:#5a5a58;color:#6b6b68}
+
+/* ---- Pomodoro panel ---- */
+.pomo-tabs{text-align:center;margin-bottom:6px}
+.pomo-tab{font-size:10px;padding:3px 9px;min-height:0;border:1px solid #4a4a48;border-radius:8px;color:#7d7b74;margin:0 2px;background:transparent}
+.pomo-tab.active{border-color:#e8574a;color:#e8574a}
+.pomo-gauge{position:relative;width:140px;height:140px;margin:4px auto}
+.pomo-ring{width:100%;height:100%}
+.pomo-ring-bg{fill:none;stroke:rgba(156,219,131,.12);stroke-width:8}
+.pomo-ring-fill{fill:none;stroke:#e8574a;stroke-width:8;stroke-linecap:round}
+.pomo-gauge-text{position:absolute;top:0;left:0;width:100%;height:100%;display:table}
+.pomo-gauge-text>div{display:table-cell;vertical-align:middle;text-align:center}
+.pomo-clock{display:block;font-size:30px;font-weight:bold;color:#e8574a;text-shadow:none;letter-spacing:1px}
+.pomo-session{font-size:11px;opacity:.6;margin-top:2px}
+.pomo-controls{margin-top:8px;text-align:center}
+.pomo-controls button{font-size:11px;padding:3px 12px;min-height:0;border:1px solid #6b6b68;border-radius:9px;color:#b0aea5;margin:0 4px}
+.pomo-controls button:hover{border-color:#e8574a;color:#e8574a}
+
+/* ---- System panel ---- */
+.sys-row{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.system-panel .sys-row{-webkit-box-flex:1;-webkit-flex:1;flex:1;margin-bottom:0}
+.sys-row:last-child{margin-bottom:0}
+.sys-label{width:52px;opacity:.7;-webkit-flex:0 0 auto;flex:0 0 auto}
+.sys-row .meter-track{-webkit-box-flex:1;-webkit-flex:1;flex:1;margin:0}
+.sys-pct{width:38px;text-align:right;-webkit-flex:0 0 auto;flex:0 0 auto}
+
+/* ---- Album art ---- */
+.art-cell{display:inline-block;vertical-align:middle}
+.art-cell img{object-fit:cover;border-radius:8px;vertical-align:top}
+.art-empty{border:1px dashed #6b6b68;color:#6b6b68;opacity:.8;font-size:9px;line-height:1.3;text-align:center;display:table;vertical-align:middle;border-radius:8px}
+.art-empty div{display:table-cell;vertical-align:middle}
+.art-cell .hidden{display:none}
+
+/* ---- Footer ---- */
+
+/* ---- Boot screen ---- */
+#boot{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:#070d08;z-index:5}
+.amber #boot{background:#100d06}
+.boot-inner{padding:110px 60px;font-size:17px}
+.boot-inner pre{font:inherit;line-height:2;margin-top:42px}
+
+/* ---- Display-help dialog (iPad setup instructions) ---- */
+#display-help{position:absolute;z-index:10;top:18%;left:15%;right:15%;padding:24px;background:#070d08;border:1px solid;font-size:15px;line-height:1.6}
+.amber #display-help{background:#100d06}
+#display-help button{border:1px solid;min-height:44px}
+
+/* ---- Agent / system detail modal ---- */
+#agent-modal{position:absolute;z-index:10;top:7%;left:14%;right:14%;bottom:7%;padding:20px 26px;background:#1f1f1e;border-radius:10px;overflow:auto;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+#agent-modal h2{color:#faf9f5;text-shadow:none;border-bottom-color:#3a3a38;font-size:16px;letter-spacing:1px;margin:0 0 10px;border-bottom:1px solid;padding-bottom:7px}
+#agent-modal h3{font-size:14px;margin:0 0 6px;color:#faf9f5}
+#agent-modal .subheading{margin-top:16px}
+#agent-modal .row{line-height:22px;font-size:12px}
+#agent-modal .label{opacity:.65;color:#b0aea5;width:90px}
+#agent-modal .value{color:#faf9f5}
+#agent-modal .note{font-size:12px;line-height:18px;opacity:.7;margin-top:14px;color:#7d7b74}
+#agent-modal .columns{display:table;width:100%;table-layout:fixed}
+#agent-modal .column{display:table-cell;vertical-align:top;width:50%}
+#agent-modal .column.left{padding-right:20px;border-right:1px solid #3a3a38}
+#agent-modal .column.right{padding-left:20px}
+#agent-modal-close{border:1px solid #6b6b68;color:#b0aea5;min-height:38px;margin-top:14px;border-radius:9px}
+#agent-modal-close:hover{border-color:#d97757;color:#d97757}
+
+h2{font-size:16px;letter-spacing:1px;margin:0 0 10px;border-bottom:1px solid;padding-bottom:7px}
+
+@media(max-height:760px){
+ #masthead{padding:4px 0 6px}
+ .meta-row{font-size:9px}
+ h1{font-size:19px}
+ #content{bottom:4px}
+ .panel{padding:8px 10px}
+ .pomo-gauge{width:110px;height:110px}
+ .weather-temp{font-size:26px}
+}
+@media(max-width:1000px){
+ .weather-body .icon-badge{width:36px;height:36px;line-height:36px;font-size:15px}
+ .weather-temp{font-size:24px}
+ .pomo-gauge{width:110px;height:110px}
+ .weather-map{width:96px}.weather-map img{width:96px;height:96px}
+}
+@media(max-width:800px){
+ #terminal{left:10px;right:10px}
+ body{font-size:13px}h1{font-size:18px}.operator{font-size:12px}
+ .meta-row{font-size:9px}
+ .header-actions{display:block;float:none;margin-top:4px}
+ .header-actions button{padding:0 6px;min-height:32px}
+}
+@media(min-width:801px) and (max-width:1200px){
+ body{font-size:19px}
+ .panel{padding:16px 18px}
+ .panel-head{font-size:17px;padding-bottom:10px;margin-bottom:14px}
+ .panel-head .tag,.pill{font-size:12px}
+ .weather-body{gap:14px}
+ .weather-body .icon-badge{width:62px;height:62px;line-height:62px;font-size:22px}
+ .weather-temp{font-size:46px}
+ .weather-feels,.weather-extra{font-size:14px}
+ .weather-cond{font-size:18px;margin-top:12px}
+ .weather-map,.weather-map img{width:150px;height:150px}
+ .now-playing-body{gap:14px}
+ .now-playing-panel .art-cell,.now-playing-panel .art-cell img,.now-playing-panel .art-empty{width:108px;height:108px}
+ .np-track{font-size:20px}.np-artist,.np-album{font-size:15px}
+ .np-controls button{font-size:18px;padding:8px 18px}
+ .sys-row{font-size:16px;margin-bottom:0}.sys-label{width:76px}
+ .meter-track{height:11px}
+ .agent-row-head{gap:14px}.agent-row-head .icon-badge{width:52px;height:52px;line-height:52px}
+ .agent-meta{font-size:16px}.agent-today,.meter-head{font-size:14px}.meter-reset{font-size:13px}
+ .agent-panel .meter{margin-top:12px}
+ .pomo-tab,.pomo-controls button{font-size:15px;padding:8px 14px}
+ .pomo-gauge{width:215px;height:215px}
+ .pomo-clock{font-size:44px}
+}
+@media(max-width:650px){
+ .dash-row{display:block;width:100%;margin:0}
+ .dash-row>.panel{display:block;width:auto;margin-bottom:9px}
+ .view>.dash-row{height:auto}
+ #content{overflow:auto}
+}
+
+/* Fixed card regions avoid flex shrink and unsupported flex gap on older iPads.
+   Each region scales with the actual card height, including Safari browser bars. */
+@media(min-width:651px){
+ #terminal{left:0;right:0}
+ #content{bottom:0}
+ .view>.dash-row{display:block;position:absolute;left:0;right:0;width:auto;height:auto;margin:0}
+ .view>.row-top{top:0;bottom:50%;margin-bottom:4px}
+ .view>.row-mid{top:50%;bottom:0;margin-top:4px}
+ .dash-row>.panel{display:block;position:absolute;top:0;bottom:0;padding:12px;min-height:0}
+ .dash-row>.panel:nth-child(1){left:0;width:33%}
+ .dash-row>.panel:nth-child(2){left:33.5%;width:33%}
+ .dash-row>.panel:nth-child(3){right:0;width:33%}
+ .panel-head{height:32px;margin:0;padding:0 0 7px;font-size:15px;white-space:nowrap;letter-spacing:0}
+ .panel-head .tag{font-size:10px;max-width:45%}
+ .pill{font-size:11px}
+ .weather-panel .weather-merged{display:block;position:absolute;top:56px;bottom:12px;left:12px;right:12px}
+ .weather-data{height:48%;position:relative}
+ .weather-body{gap:0}
+ .weather-panel .weather-body{display:block}
+ .weather-panel .weather-badge{display:none}
+ .weather-panel .weather-cond{margin:0 0 3px;font-size:14px;letter-spacing:.4px}
+ .weather-panel .weather-feels{margin-top:3px;font-size:13px}
+ .weather-body .icon-badge{width:48px;height:48px;line-height:48px;margin-right:12px;font-size:17px}
+ .weather-temp{font-size:42px}
+ .weather-feels{font-size:12px}
+ .weather-cond{font-size:15px;margin-top:8px}
+ .weather-extra{display:block;margin-top:5px;font-size:12px;line-height:1.6}
+ .weather-extra>span{display:inline-block;margin-right:10px}
+ .weather-map{position:absolute;top:51%;bottom:0;left:0;right:0;width:auto;height:auto}
+ .weather-map img{width:100%;height:100%;object-fit:cover}
+ .weather-map-caption{font-size:10px}
+ .now-playing-panel .now-playing-body{position:absolute;top:56px;bottom:100px;left:12px;right:12px;gap:0}
+ .now-playing-panel .art-cell{width:92px;height:92px;margin-right:12px;-webkit-box-flex:0}
+ .now-playing-panel .art-cell img,.now-playing-panel .art-empty{width:92px;height:92px}
+ .now-playing-info{-webkit-box-flex:1;width:0}
+ .np-track{white-space:normal;word-wrap:break-word;font-size:17px;line-height:1.25;max-height:64px}
+ .np-artist,.np-album{font-size:13px;margin-top:6px}
+ .np-progress{position:absolute;bottom:65px;left:12px;right:12px;margin:0}
+ .np-times{font-size:11px}
+ .np-controls{position:absolute;bottom:12px;left:12px;right:12px;margin:0;white-space:nowrap}
+ .np-controls button{height:42px;width:27%;padding:0;margin:0 2%;font-size:17px}
+ .system-panel .sys-row{position:absolute;left:12px;right:12px;height:20%;margin:0;gap:0;font-size:16px}
+ .system-panel .sys-row:nth-child(2){top:17%}
+ .system-panel .sys-row:nth-child(3){top:43%}
+ .system-panel .sys-row:nth-child(4){top:69%}
+ .sys-label{width:68px;margin-right:8px}
+ .sys-pct{width:36px;margin-left:8px}
+ .sys-row .value{display:block;min-width:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;font-size:13px}
+ .system-panel .meter-track{height:22px;border-radius:5px}
+ .agent-row-head{position:absolute;left:12px;right:12px;top:18%;height:22%;margin:0;gap:0}
+ .agent-row-head .icon-badge{width:46px;height:46px;line-height:46px;margin-right:12px;-webkit-box-flex:0}
+ .agent-meta{font-size:16px;width:calc(100% - 58px);-webkit-box-flex:0;-webkit-flex:0 0 calc(100% - 58px);flex:0 0 calc(100% - 58px)}
+ .agent-today{font-size:12px;margin-top:5px}
+ .agent-panel .meter{position:absolute;left:12px;right:12px;height:24%;margin:0;padding:8px 10px;border:1px solid rgba(156,219,131,.16);border-radius:5px;background:rgba(156,219,131,.035)}
+ .agent-panel .meter:nth-child(3){top:44%}
+ .agent-panel .meter:nth-child(4){top:72%}
+ .meter-head{font-size:15px;opacity:.9}
+ .agent-panel .meter-track{margin:6px 0}
+ .meter-reset{font-size:11px;opacity:.75}
+ .pomo-tabs{position:absolute;top:51px;left:12px;right:12px;height:36px;margin:0;white-space:nowrap}
+ .pomo-tab{width:31%;height:36px;margin:0;padding:0;font-size:10px;letter-spacing:-.3px}
+ .pomo-gauge{position:absolute;top:95px;bottom:62px;left:12px;right:12px;width:auto;height:auto;margin:0}
+ .pomo-ring{display:block}
+ .pomo-clock{font-size:36px;line-height:1.1}
+ .pomo-session{font-size:12px;margin-top:5px}
+ .pomo-controls{position:absolute;left:12px;right:12px;bottom:12px;height:40px;margin:0;white-space:nowrap}
+ .pomo-controls button{height:40px;width:40%;padding:0;margin:0 2%;font-size:13px}
+}
+@media(min-width:651px) and (max-height:680px){
+ .panel-head{font-size:13px;height:28px}
+ .weather-panel .weather-merged{top:45px}
+ .weather-temp{font-size:32px}
+ .weather-body .icon-badge{width:38px;height:38px;line-height:38px}
+ .weather-cond{margin-top:3px;font-size:13px}
+ .weather-extra{font-size:10px;margin-top:2px}
+ .pomo-tabs{top:44px;height:32px}
+ .pomo-tab{height:32px}
+ .pomo-gauge{top:82px;bottom:58px}
+ .pomo-clock{font-size:30px}
+ .agent-panel .meter{padding:4px 8px}
+ .meter-head{font-size:13px}
+ .meter-reset{font-size:10px}
+ .agent-panel .meter-track{margin:4px 0}
+}
+@media(min-width:651px) and (min-height:681px){
+ .panel-head{font-size:17px;height:38px;padding-bottom:9px}
+ .weather-panel .weather-merged{top:62px;bottom:14px;left:14px;right:14px}
+ .weather-data{height:38%}
+ .weather-cond{margin-top:0;font-size:16px}
+ .weather-extra{display:flex;gap:16px;line-height:1.5;margin-top:12px;white-space:nowrap}
+ .weather-map{top:42%;left:0;right:0}
+ .weather-map-caption{font-size:11px;padding:4px 7px}
+ .system-panel .sys-row{left:14px;right:14px;font-size:18px;height:20%}
+ .sys-label{width:78px}
+ .system-panel .meter-track{height:26px;border-radius:6px}
+ .agent-row-head{left:14px;right:14px;top:16%;height:22%}
+ .agent-row-head .icon-badge{width:56px;height:56px;line-height:56px;font-size:19px}
+ .agent-meta{font-size:18px;width:calc(100% - 70px);-webkit-box-flex:0;-webkit-flex:0 0 calc(100% - 70px);flex:0 0 calc(100% - 70px)}
+ .agent-today{font-size:14px}
+ .agent-panel .meter{left:14px;right:14px;height:28%;padding:12px 14px;background:rgba(156,219,131,.055)}
+ .agent-panel .meter:nth-child(3){top:41%}
+ .agent-panel .meter:nth-child(4){top:71%}
+ .meter-head{font-size:17px}
+ .agent-panel .meter-track{height:16px;margin:8px 0}
+ .meter-reset{font-size:13px}
+ .pomo-tabs{top:60px;left:14px;right:14px}
+ .pomo-gauge{top:108px;bottom:70px;left:14px;right:14px}
+ .pomo-clock{font-size:42px}
+ .pomo-controls{left:14px;right:14px;bottom:14px}
+ .np-progress{left:14px;right:14px;bottom:72px}
+ .np-controls{left:14px;right:14px;bottom:14px}
+}
