@@ -2,6 +2,8 @@
 
 Local telemetry dashboard for an older iPad. The computer runs the server; the iPad opens the interface in a browser.
 
+![ROBCO Operations Terminal dashboard](IMG_0005.PNG)
+
 ## Run
 
 Requires Python 3.10+.
