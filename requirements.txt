@@ -1,0 +1,6 @@
+Flask>=3.0,<4
+psutil>=5.9,<8
+winrt-runtime==3.2.1; platform_system == "Windows"
+winrt-Windows.Foundation==3.2.1; platform_system == "Windows"
+winrt-Windows.Media.Control==3.2.1; platform_system == "Windows"
+winrt-Windows.Storage.Streams==3.2.1; platform_system == "Windows"

@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+.env
+artifacts/
+app copy.py
+README copy.md
+requirements copy.txt
+download
+terminal.css
+terminal.js
+web/display.js

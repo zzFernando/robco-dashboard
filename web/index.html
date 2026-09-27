@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>ROBCO // Operations Terminal</title>
+<link rel="stylesheet" href="/static/terminal.css?v=bold-5">
+</head>
+<body>
+<div id="terminal">
+  <div id="content">
+    <div id="view-status" class="view">
+
+      <div class="dash-row row-top">
+        <div class="panel weather-panel">
+          <div class="panel-head"><span>// WEATHER</span><span class="tag" data-field="weather.location">LOCALIZANDO...</span></div>
+          <div class="weather-merged">
+            <div class="weather-data">
+              <div class="weather-body">
+                <span id="weather-icon" class="icon-badge weather-badge">WX</span>
+                <div>
+                  <div class="weather-temp" data-field="weather.temp_big">--&deg;</div>
+                </div>
+              </div>
+              <div class="weather-cond" data-field="weather.cond_only">UNKNOWN</div>
+              <div class="weather-feels" data-field="weather.feels">FEELS --</div>
+              <div class="weather-extra">
+                <span>H <span data-field="weather.high">--&deg;</span></span>
+                <span>L <span data-field="weather.low">--&deg;</span></span>
+                <span data-field="weather.hum">HUM --%</span>
+                <span data-field="weather.wind">WIND --</span>
+              </div>
+            </div>
+            <div class="weather-map">
+              <img id="location-map" alt="" class="hidden">
+              <div id="city-photo-empty">FOTO INDISPONIVEL</div>
+              <div class="weather-map-caption"><span id="location-method">LOCALIZANDO...</span><a id="city-photo-source" target="_blank" rel="noopener noreferrer">FONTE</a></div>
+            </div>
+          </div>
+        </div>
+        <div id="system-card" class="panel system-panel clickable" role="button" tabindex="0">
+          <div class="panel-head"><span>// SYSTEM</span><span class="tag" data-field="system.host">HOST</span></div>
+          <div class="sys-row"><span class="sys-label">CPU</span><div class="meter-track"><div id="sys-fill-cpu" class="meter-fill"></div></div><span id="sys-pct-cpu" class="sys-pct">--</span></div>
+          <div class="sys-row"><span class="sys-label">MEMORY</span><div class="meter-track"><div id="sys-fill-mem" class="meter-fill"></div></div><span id="sys-pct-mem" class="sys-pct">--</span></div>
+          <div class="sys-row"><span class="sys-label">DISK</span><div class="meter-track"><div id="sys-fill-disk" class="meter-fill"></div></div><span id="sys-pct-disk" class="sys-pct">--</span></div>
+        </div>
+        <div class="panel now-playing-panel">
+          <div class="panel-head"><span>// NOW PLAYING</span><span class="tag" data-field="media.source">UNKNOWN</span></div>
+          <div class="now-playing-body">
+            <div class="art-cell"><img id="album-art" class="hidden" alt=""><div id="album-art-empty" class="art-empty"><div>NO<br>ART</div></div></div>
+            <div class="now-playing-info">
+              <div class="np-track" data-field="media.track">UNKNOWN</div>
+              <div class="np-artist" data-field="media.artist">UNKNOWN</div>
+              <div class="np-album" data-field="media.album">UNKNOWN</div>
+            </div>
+          </div>
+          <div class="np-progress">
+            <div class="meter-track"><div id="media-fill" class="meter-fill"></div></div>
+            <div class="np-times"><span id="media-pos">--:--</span><span id="media-dur">--:--</span></div>
+          </div>
+          <div class="np-controls">
+            <button id="media-prev" type="button" title="Previous">&#9664;&#9664;</button>
+            <button id="media-toggle" type="button" title="Play/Pause">&#9646;&#9646;</button>
+            <button id="media-next" type="button" title="Next">&#9654;&#9654;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-row row-mid">
+        <div id="codex-card" class="panel agent-panel clickable" role="button" tabindex="0">
+          <div class="panel-head"><span>// CODEX-01</span><span id="codex-pill" class="pill">UNKNOWN</span></div>
+          <div class="agent-row-head"><span class="icon-badge codex-badge">&#10095;_</span><div class="agent-meta"><div class="value" data-field="codex.model">UNKNOWN</div><div class="agent-today" data-field="codex.today">UNKNOWN</div></div></div>
+          <div class="meter"><div class="meter-head"><span>5H</span><span id="codex-pct-primary">--</span></div><div class="meter-track"><div id="codex-fill-primary" class="meter-fill"></div></div><div id="codex-reset-primary" class="meter-reset">RESETS UNKNOWN</div></div>
+          <div class="meter"><div class="meter-head"><span>7D</span><span id="codex-pct-secondary">--</span></div><div class="meter-track"><div id="codex-fill-secondary" class="meter-fill"></div></div><div id="codex-reset-secondary" class="meter-reset">RESETS UNKNOWN</div></div>
+        </div>
+        <div id="claude-card" class="panel agent-panel clickable" role="button" tabindex="0">
+          <div class="panel-head"><span>// CLAUDE-01</span><span id="claude-pill" class="pill">UNKNOWN</span></div>
+          <div class="agent-row-head"><span class="icon-badge claude-badge">&#10043;</span><div class="agent-meta"><div class="value" data-field="claude.model">UNKNOWN</div><div class="agent-today" data-field="claude.today">UNKNOWN</div></div></div>
+          <div class="meter"><div class="meter-head"><span>5H</span><span id="claude-pct-primary">--</span></div><div class="meter-track"><div id="claude-fill-primary" class="meter-fill"></div></div><div id="claude-reset-primary" class="meter-reset">RESETS UNKNOWN</div></div>
+          <div class="meter"><div class="meter-head"><span>7D</span><span id="claude-pct-secondary">--</span></div><div class="meter-track"><div id="claude-fill-secondary" class="meter-fill"></div></div><div id="claude-reset-secondary" class="meter-reset">RESETS UNKNOWN</div></div>
+        </div>
+        <div class="panel pomodoro-panel">
+          <div class="panel-head"><span>// POMODORO</span><span id="pomo-pill" class="pill pill-off">READY</span></div>
+          <div class="pomo-tabs">
+            <button id="pomo-tab-work" class="pomo-tab active" type="button">FOCUS</button>
+            <button id="pomo-tab-short" class="pomo-tab" type="button">SHORT BREAK</button>
+            <button id="pomo-tab-long" class="pomo-tab" type="button">LONG BREAK</button>
+          </div>
+          <div class="pomo-gauge">
+            <svg class="pomo-ring" viewBox="0 0 120 120" width="120" height="120">
+              <circle class="pomo-ring-bg" cx="60" cy="60" r="54"></circle>
+              <circle id="pomo-ring-fill" class="pomo-ring-fill" cx="60" cy="60" r="54" transform="rotate(-90 60 60)"></circle>
+            </svg>
+            <div class="pomo-gauge-text"><div><div class="pomo-clock" id="pomo-clock">25:00</div><div class="pomo-session" id="pomo-session">1 / 4</div></div></div>
+          </div>
+          <div class="pomo-controls"><button id="pomo-toggle" type="button">START</button><button id="pomo-reset" type="button">RESET</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div id="boot"><div class="boot-inner"><div>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</div><div class="dim">TERMINAL STARTUP SIMULATION // REV 01.00</div><pre>MEMORY CHECK ........ OK
+NETWORK INTERFACE ... OK
+TELEMETRY SERVICE ... OK
+
+INITIALIZING OPERATIONS TERMINAL...</pre><span class="dim">ESTABLISHING LIVE TELEMETRY AFTER STARTUP</span></div></div>
+<noscript>This terminal requires JavaScript for telemetry.</noscript>
+<div id="display-help" class="hidden" role="dialog" aria-labelledby="display-help-title">
+  <h2 id="display-help-title">&gt; IPAD / DISPLAY SETUP</h2>
+  <p id="display-reason"></p>
+  <p>iPad antigo: no Safari, toque em Compartilhar e depois em <strong>Adicionar à Tela de Início</strong>. Abra o terminal pelo ícone criado para usar a tela sem as barras do Safari.</p>
+  <p>Para a tela não bloquear: <strong>Ajustes &gt; Geral &gt; Bloqueio Automático &gt; Nunca</strong>. Em versões recentes do iOS, fica em Tela e Brilho.</p>
+  <p>A página não consegue mudar esse ajuste no iPad antigo. Mantenha o aparelho conectado à energia durante o uso contínuo.</p>
+  <button id="display-help-close" type="button">[ FECHAR ]</button>
+</div>
+<div id="agent-modal" class="hidden" role="dialog" aria-labelledby="agent-modal-title">
+  <div id="agent-modal-codex" class="agent-modal-panel">
+    <h2 id="agent-modal-title">&gt; CODEX-01 <span class="value" data-field="codex.badge">[UNKNOWN]</span></h2>
+    <div class="row"><span class="label">SOURCE</span><span class="value" data-field="codex.usage_source">UNKNOWN</span></div>
+    <div class="row"><span class="label">SESSION</span><span class="value" data-field="codex.usage_id">UNKNOWN</span></div>
+    <div class="row"><span class="label">MODEL</span><span class="value" data-field="codex.model">UNKNOWN</span></div>
+    <div class="row"><span class="label">PROJECT</span><span class="value" data-field="codex.usage_project">UNKNOWN</span></div>
+    <div class="row"><span class="label">TOKENS</span><span class="value" data-field="codex.tokens">UNKNOWN</span></div>
+    <div class="row"><span class="label">IN / OUT</span><span class="value" data-field="codex.input_output">UNKNOWN</span></div>
+    <div class="row"><span class="label">CACHE R/W</span><span class="value" data-field="codex.cache">UNKNOWN</span></div>
+    <div class="row"><span class="label">TODAY</span><span class="value" data-field="codex.today">UNKNOWN</span></div>
+    <div class="row"><span class="label">CONTEXT</span><span class="value" data-field="codex.context">UNKNOWN</span></div>
+    <div class="row"><span class="label">LIMIT 1</span><span class="value" data-field="codex.limit_primary">UNKNOWN</span></div>
+    <div class="row"><span class="label">RESET 1</span><span class="value" data-field="codex.reset_primary">UNKNOWN</span></div>
+    <div class="row"><span class="label">LIMIT 2</span><span class="value" data-field="codex.limit_secondary">UNKNOWN</span></div>
+    <div class="row"><span class="label">RESET 2</span><span class="value" data-field="codex.reset_secondary">UNKNOWN</span></div>
+    <div class="row"><span class="label">UPDATED</span><span class="value" data-field="codex.usage_updated">UNKNOWN</span></div>
+    <div class="row"><span class="label">PROCESS</span><span class="value" data-field="codex.process">UNKNOWN</span></div>
+    <div class="note usage-note">TOKENS = selected session; TODAY = local logs, not account billing. STALE = older than 2 min.<br>INPUT includes cache. CONTEXT = last request / reported window. PARTIAL = incomplete logs.<br>WORKING / IDLE / WAITING require recent log events and a matching process directory.</div>
+  </div>
+  <div id="agent-modal-claude" class="agent-modal-panel hidden">
+    <h2>&gt; CLAUDE-01 <span class="value" data-field="claude.badge">[UNKNOWN]</span></h2>
+    <div class="row"><span class="label">SOURCE</span><span class="value" data-field="claude.usage_source">UNKNOWN</span></div>
+    <div class="row"><span class="label">SESSION</span><span class="value" data-field="claude.usage_id">UNKNOWN</span></div>
+    <div class="row"><span class="label">MODEL</span><span class="value" data-field="claude.model">UNKNOWN</span></div>
+    <div class="row"><span class="label">PROJECT</span><span class="value" data-field="claude.usage_project">UNKNOWN</span></div>
+    <div class="row"><span class="label">TOKENS</span><span class="value" data-field="claude.tokens">UNKNOWN</span></div>
+    <div class="row"><span class="label">IN / OUT</span><span class="value" data-field="claude.input_output">UNKNOWN</span></div>
+    <div class="row"><span class="label">CACHE R/W</span><span class="value" data-field="claude.cache">UNKNOWN</span></div>
+    <div class="row"><span class="label">TODAY</span><span class="value" data-field="claude.today">UNKNOWN</span></div>
+    <div class="row"><span class="label">CONTEXT</span><span class="value" data-field="claude.context">UNKNOWN</span></div>
+    <div class="row"><span class="label">LIMIT 1</span><span class="value" data-field="claude.limit_primary">UNKNOWN</span></div>
+    <div class="row"><span class="label">RESET 1</span><span class="value" data-field="claude.reset_primary">UNKNOWN</span></div>
+    <div class="row"><span class="label">LIMIT 2</span><span class="value" data-field="claude.limit_secondary">UNKNOWN</span></div>
+    <div class="row"><span class="label">RESET 2</span><span class="value" data-field="claude.reset_secondary">UNKNOWN</span></div>
+    <div class="row"><span class="label">UPDATED</span><span class="value" data-field="claude.usage_updated">UNKNOWN</span></div>
+    <div class="row"><span class="label">PROCESS</span><span class="value" data-field="claude.process">UNKNOWN</span></div>
+    <div class="note usage-note">TOKENS = selected session; TODAY = local logs, not account billing. STALE = older than 2 min.<br>INPUT includes cache. CONTEXT = last request / reported window. PARTIAL = incomplete logs.<br>WORKING / IDLE / WAITING require recent log events and a matching process directory.</div>
+  </div>
+  <div id="agent-modal-system" class="agent-modal-panel hidden">
+    <h2>&gt; HOST / REPOSITORY</h2>
+    <div class="columns detail">
+      <div class="column left"><h3 class="subheading">&gt; HOST TELEMETRY</h3><div class="row"><span class="label">CPU</span><span class="value" data-field="system.cpu">UNKNOWN</span></div><div class="row"><span class="label">MEM</span><span class="value" data-field="system.memory">UNKNOWN</span></div><div class="row"><span class="label">NET</span><span class="value" data-field="system.network">UNKNOWN</span></div><div class="row"><span class="label">HOST</span><span class="value" data-field="system.host">UNKNOWN</span></div><div class="row"><span class="label">OS</span><span class="value" data-field="system.os">UNKNOWN</span></div><div class="row"><span class="label">UPTIME</span><span class="value" data-field="system.uptime">UNKNOWN</span></div><h3 class="subheading">&gt; STORAGE</h3><div class="row"><span class="label">DISK</span><span class="value" data-field="system.disk">UNKNOWN</span></div><div class="row"><span class="label">VOLUME</span><span class="value" data-field="system.volume">UNKNOWN</span></div><div class="row"><span class="label">USED</span><span class="value" data-field="system.diskspace">UNKNOWN</span></div><div class="row"><span class="label">RAM</span><span class="value" data-field="system.memspace">UNKNOWN</span></div></div>
+      <div class="column right"><h3 class="subheading">&gt; REPOSITORY</h3><div class="row"><span class="label">BRANCH</span><span class="value" data-field="git.branch">UNKNOWN</span></div><div class="row"><span class="label">TREE</span><span class="value" data-field="git.tree">UNKNOWN</span></div><div class="row"><span class="label">COMMIT</span><span class="value" data-field="git.commit">UNKNOWN</span></div><h3 class="subheading">&gt; TELEMETRY LINK</h3><div class="row"><span class="label">SAMPLED</span><span class="value" data-field="sampled">UNKNOWN</span></div><div class="note">POLL INTERVAL ... 03 SEC<br>NETWORK = usable local interface.<br>Internet reachability is not tested.<br><br>All inspection runs on the host.<br>This terminal is a display only.</div></div>
+    </div>
+  </div>
+  <button id="agent-modal-close" type="button">[ CLOSE ]</button>
+</div>
+<script src="/static/location.js?v=5"></script>
+<script src="/static/terminal.js?v=city-photo-11"></script>
+</body>
+</html>
