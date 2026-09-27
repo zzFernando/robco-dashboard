@@ -62,9 +62,15 @@
             <div class="np-times"><span id="media-pos">--:--</span><span id="media-dur">--:--</span></div>
           </div>
           <div class="np-controls">
-            <button id="media-prev" type="button" title="Previous">&#9664;&#9664;</button>
-            <button id="media-toggle" type="button" title="Play/Pause">&#9646;&#9646;</button>
-            <button id="media-next" type="button" title="Next">&#9654;&#9654;</button>
+            <button id="media-prev" type="button" title="Previous" aria-label="Previous">
+              <svg class="media-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-8 6 8 6V6z"/></svg>
+            </button>
+            <button id="media-toggle" type="button" title="Play/Pause" aria-label="Play/Pause">
+              <svg class="media-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+            </button>
+            <button id="media-next" type="button" title="Next" aria-label="Next">
+              <svg class="media-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l8 6-8 6V6z"/></svg>
+            </button>
           </div>
         </div>
       </div>
